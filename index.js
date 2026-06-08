@@ -1,7 +1,5 @@
 import sendMail from "./mail.js";
 
-await sendMail("Just for testing")
-
 const doc_date_res = await fetch("https://www.drrmlims.ac.in/OnlineToken/GetDates?doctorId=2145");
 const res = await doc_date_res.json();
 
