@@ -2,7 +2,7 @@ name: Monitor API
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "7,22,37,52 * * * *"
 
   workflow_dispatch:
 
@@ -25,4 +25,4 @@ jobs:
       - name: Run Monitor
         run: node index.js
         env:
-          pass: ${{ secrets.APP_PASSWORD }}
+          pass: ${{ secrets.APP_PASSWORD }} # repo secret
