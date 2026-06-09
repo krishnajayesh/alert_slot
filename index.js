@@ -6,13 +6,14 @@ const res = await doc_date_res.json();
 if (doc_date_res.status == 429 || doc_date_res.status != 200) 
     await sendMail("Rate limit reached");
 
+if (res.length == 0) {
+    console.log("No response came")
+    process.exit(1)
+}
 
 const date = res.map((x) => x.Text).map((y) => y.split("-"))
+const isDateAvail = date.map((x) => x[0] > 10).reduce((x,y) => x || y)
 console.log(date)
-const day1 = date[0][0] > 10 
-const day2 = date[1][0] > 10
-
-const isDateAvail = day1 | day2
 
 if(isDateAvail) {
     await sendMail("Slot book karo, portal open ho gaya hai")
@@ -20,4 +21,3 @@ if(isDateAvail) {
 } else {
     console.log(false)
 }
-
