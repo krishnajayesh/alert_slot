@@ -8,7 +8,7 @@ if (doc_date_res.status == 429 || doc_date_res.status != 200)
 
 if (res.length == 0) {
     console.log("No response came")
-    process.exit(1)
+    process.exit(0)
 }
 
 const date = res.map((x) => x.Text).map((y) => y.split("-"))
