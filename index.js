@@ -1,23 +1,38 @@
 import sendMail from "./mail.js";
 
-const doc_date_res = await fetch("https://www.drrmlims.ac.in/OnlineToken/GetDates?doctorId=2145");
-const res = await doc_date_res.json();
+const TARGET_DATE = "30-09-2026";
+const URL = "https://www.drrmlims.ac.in/OnlineToken/GetDates?doctorId=2145";
 
-if (doc_date_res.status == 429 || doc_date_res.status != 200) 
-    await sendMail("Rate limit reached");
+try {
+  const response = await fetch(URL);
 
-if (res.length == 0) {
-    console.log("No response came")
-    process.exit(0)
-}
+  if (!response.ok) {
+    console.error(`Request failed with status: ${response.status}`);
+    if (response.status === 429) {
+      await sendMail("Rate limit reached");
+    }
+    process.exit(1);
+  }
 
-const date = res.map((x) => x.Text).map((y) => y.split("-"))
-const isDateAvail = date.map((x) => x[0] > 10).reduce((x,y) => x || y)
-console.log(date)
+  const res = await response.json();
 
-if(isDateAvail) {
-    await sendMail("Slot book karo, portal open ho gaya hai")
-    console.log("mail send")
-} else {
-    console.log(false)
+  if (!Array.isArray(res) || res.length === 0) {
+    console.log("No dates available");
+    process.exit(0);
+  }
+
+  // Check if target date exists in the response
+  const isDateAvail = res.some((slot) => slot.Text === TARGET_DATE);
+
+  console.log("Available dates:", res.map((s) => s.Text));
+  console.log(`Is ${TARGET_DATE} available:`, isDateAvail);
+
+  if (isDateAvail) {
+    await sendMail("Slot book karo, portal open ho gaya hai");
+    console.log("Mail sent successfully");
+  } else {
+    console.log(`Target date ${TARGET_DATE} not found.`);
+  }
+} catch (error) {
+  console.error("Error during execution:", error);
 }
