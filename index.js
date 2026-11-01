@@ -1,6 +1,6 @@
 import sendMail from "./mail.js";
 
-const TARGET_DATE = "30-09-2026";
+const TARGET_DATE = "04-11-2026";
 const URL = "https://www.drrmlims.ac.in/OnlineToken/GetDates?doctorId=2145";
 
 try {
